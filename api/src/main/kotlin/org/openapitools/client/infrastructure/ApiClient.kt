@@ -6,6 +6,8 @@ import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.forms.FormDataContent
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
@@ -24,39 +26,38 @@ import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import org.openapitools.client.auth.*
 
-open class ApiClient {
-    private val baseUrl: String
-    private val client: HttpClient
-    private val authentications: kotlin.collections.Map<String, Authentication>
-
-    constructor(
-        baseUrl: String,
+open class ApiClient(
+        private val baseUrl: String,
         httpClientEngine: HttpClientEngine?,
         httpClientConfig: ((HttpClientConfig<*>) -> Unit)? = null,
-    ) {
-        this.baseUrl = baseUrl
-        val clientConfig: (HttpClientConfig<*>) -> Unit = {
+) {
+
+    private val clientConfig: (HttpClientConfig<*>) -> Unit by lazy {
+        {
             it.install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                    encodeDefaults = true
+                })
             }
             httpClientConfig?.invoke(it)
         }
-        this.client = httpClientEngine?.let { HttpClient(it, clientConfig) } ?: HttpClient(clientConfig)
-        this.authentications = mapOf(
+    }
+
+    private val client: HttpClient by lazy {
+        httpClientEngine?.let { HttpClient(it, clientConfig) } ?: HttpClient(clientConfig)
+    }
+
+    private val authentications: kotlin.collections.Map<String, Authentication> by lazy {
+        mapOf(
                 "OptionalHTTPBearer" to HttpBearerAuth("Bearer"), 
                 "HTTPBearer" to HttpBearerAuth("Bearer"))
     }
 
-    constructor(baseUrl: String, httpClient: HttpClient) {
-        this.baseUrl = baseUrl
-        this.client = httpClient
-        this.authentications = mapOf(
-                "OptionalHTTPBearer" to HttpBearerAuth("Bearer"),
-                "HTTPBearer" to HttpBearerAuth("Bearer"))
-    }
-
     companion object {
-          const val BASE_URL = "http://localhost"
-          protected val UNSAFE_HEADERS = listOf(HttpHeaders.ContentType)
+          const val BASE_URL: String = "http://localhost"
+          protected val UNSAFE_HEADERS: List<String> = listOf(HttpHeaders.ContentType)
     }
 
     /**

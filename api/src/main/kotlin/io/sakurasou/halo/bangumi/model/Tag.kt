@@ -6,37 +6,17 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param name 
- * @param count 
+ * @param name
+ * @param count
  */
 
-
-data class Tag (
-
-    @Json(name = "name")
-    val name: kotlin.String,
-
-    @Json(name = "count")
-    val count: kotlin.Int
-
-) {
-
-
-}
-
+@Serializable
+data class Tag(
+    val name: String,
+    val count: Int,
+)

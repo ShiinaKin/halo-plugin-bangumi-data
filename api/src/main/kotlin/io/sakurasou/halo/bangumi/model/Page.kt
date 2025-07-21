@@ -6,41 +6,19 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param total 
- * @param limit 
- * @param offset 
+ * @param total
+ * @param limit
+ * @param offset
  */
 
-
-data class Page (
-
-    @Json(name = "total")
-    val total: kotlin.Int,
-
-    @Json(name = "limit")
-    val limit: kotlin.Int,
-
-    @Json(name = "offset")
-    val offset: kotlin.Int
-
-) {
-
-
-}
-
+@Serializable
+data class Page(
+    val total: Int,
+    val limit: Int,
+    val offset: Int,
+)

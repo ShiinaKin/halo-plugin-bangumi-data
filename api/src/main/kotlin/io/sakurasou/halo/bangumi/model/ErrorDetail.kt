@@ -10,38 +10,25 @@
     "ArrayInDataClass",
     "EnumEntryName",
     "RemoveRedundantQualifierName",
-    "UnusedImport"
+    "UnusedImport",
 )
 
 package io.sakurasou.halo.bangumi.model
 
 import io.sakurasou.halo.bangumi.model.Detail
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
  *
- * @param title 
- * @param description 
- * @param details 
+ *
+ * @param title
+ * @param description
+ * @param details
  */
 
-
-data class ErrorDetail (
-
-    @Json(name = "title")
-    val title: kotlin.String,
-
-    @Json(name = "description")
-    val description: kotlin.String,
-
-    @Json(name = "details")
-    val details: Detail? = null
-
-) {
-
-
-}
-
+@Serializable
+data class ErrorDetail(
+    val title: String,
+    val description: String,
+    val details: Detail? = null,
+)

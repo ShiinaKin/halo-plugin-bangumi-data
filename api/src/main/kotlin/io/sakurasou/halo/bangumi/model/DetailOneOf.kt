@@ -6,39 +6,19 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
  * @param error error message
  * @param path request path
  */
 
-
-data class DetailOneOf (
-
-    /* error message */
-    @Json(name = "error")
-    val error: kotlin.String? = null,
-
-    /* request path */
-    @Json(name = "path")
-    val path: kotlin.String? = null
-
-) {
-
-
-}
-
+@Serializable
+data class DetailOneOf(
+    // error message
+    val error: String? = null,
+    // request path
+    val path: String? = null,
+)

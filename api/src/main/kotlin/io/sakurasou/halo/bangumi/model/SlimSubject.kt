@@ -6,31 +6,18 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-import io.sakurasou.halo.bangumi.model.Images
-import io.sakurasou.halo.bangumi.model.SubjectType
-import io.sakurasou.halo.bangumi.model.Tag
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param id 
- * @param type 
- * @param name 
- * @param nameCn 
+ * @param id
+ * @param type
+ * @param name
+ * @param nameCn
  * @param shortSummary 截短后的条目描述。
- * @param images 
+ * @param images
  * @param volumes 书籍条目的册数，由旧服务端从wiki中解析
  * @param eps 由旧服务端从wiki中解析，对于书籍条目为`话数`
  * @param collectionTotal 收藏人数
@@ -40,58 +27,30 @@ import com.squareup.moshi.JsonClass
  * @param date air date in `YYYY-MM-DD` format
  */
 
-
-data class SlimSubject (
-
-    @Json(name = "id")
-    val id: kotlin.Int,
-
-    @Json(name = "type")
+@Serializable
+data class SlimSubject(
+    val id: Int,
     val type: SubjectType,
-
-    @Json(name = "name")
-    val name: kotlin.String,
-
-    @Json(name = "name_cn")
-    val nameCn: kotlin.String,
-
-    /* 截短后的条目描述。 */
-    @Json(name = "short_summary")
-    val shortSummary: kotlin.String,
-
-    @Json(name = "images")
+    val name: String,
+    @SerialName(value = "name_cn")
+    val nameCn: String,
+    // 截短后的条目描述。
+    @SerialName(value = "short_summary")
+    val shortSummary: String,
     val images: Images,
-
-    /* 书籍条目的册数，由旧服务端从wiki中解析 */
-    @Json(name = "volumes")
-    val volumes: kotlin.Int,
-
-    /* 由旧服务端从wiki中解析，对于书籍条目为`话数` */
-    @Json(name = "eps")
-    val eps: kotlin.Int,
-
-    /* 收藏人数 */
-    @Json(name = "collection_total")
-    val collectionTotal: kotlin.Int,
-
-    /* 分数 */
-    @Json(name = "score")
-    val score: java.math.BigDecimal,
-
-    /* 排名 */
-    @Json(name = "rank")
-    val rank: kotlin.Int,
-
-    /* 前 10 个 tag */
-    @Json(name = "tags")
-    val tags: kotlin.collections.List<Tag>,
-
-    /* air date in `YYYY-MM-DD` format */
-    @Json(name = "date")
-    val date: kotlin.String? = null
-
-) {
-
-
-}
-
+    // 书籍条目的册数，由旧服务端从wiki中解析
+    val volumes: Int,
+    // 由旧服务端从wiki中解析，对于书籍条目为`话数`
+    val eps: Int,
+    // 收藏人数
+    @SerialName(value = "collection_total")
+    val collectionTotal: Int,
+    // 分数
+    val score: Double,
+    // 排名
+    val rank: Int,
+    // 前 10 个 tag
+    val tags: List<Tag>,
+    // air date in `YYYY-MM-DD` format
+    val date: String? = null,
+)

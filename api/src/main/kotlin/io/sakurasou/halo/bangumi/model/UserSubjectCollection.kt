@@ -6,77 +6,42 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-import io.sakurasou.halo.bangumi.model.SlimSubject
-import io.sakurasou.halo.bangumi.model.SubjectCollectionType
-import io.sakurasou.halo.bangumi.model.SubjectType
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param subjectId 
- * @param subjectType 
- * @param rate 
- * @param type 
- * @param tags 
- * @param epStatus 
- * @param volStatus 
+ * @param subjectId
+ * @param subjectType
+ * @param rate
+ * @param type
+ * @param tags
+ * @param epStatus
+ * @param volStatus
  * @param updatedAt 本时间并不代表条目的收藏时间。修改评分，评价，章节观看状态等收藏信息时未更新此时间是一个 bug。请不要依赖此特性
- * @param `private` 
- * @param comment 
- * @param subject 
+ * @param `private`
+ * @param comment
+ * @param subject
  */
 
-
-data class UserSubjectCollection (
-
-    @Json(name = "subject_id")
-    val subjectId: kotlin.Int,
-
-    @Json(name = "subject_type")
+@Serializable
+data class UserSubjectCollection(
+    @SerialName(value = "subject_id")
+    val subjectId: Int,
+    @SerialName(value = "subject_type")
     val subjectType: SubjectType,
-
-    @Json(name = "rate")
-    val rate: kotlin.Int,
-
-    @Json(name = "type")
+    val rate: Int,
     val type: SubjectCollectionType,
-
-    @Json(name = "tags")
-    val tags: kotlin.collections.List<kotlin.String>,
-
-    @Json(name = "ep_status")
-    val epStatus: kotlin.Int,
-
-    @Json(name = "vol_status")
-    val volStatus: kotlin.Int,
-
-    /* 本时间并不代表条目的收藏时间。修改评分，评价，章节观看状态等收藏信息时未更新此时间是一个 bug。请不要依赖此特性 */
-    @Json(name = "updated_at")
-    val updatedAt: java.time.OffsetDateTime,
-
-    @Json(name = "private")
-    val `private`: kotlin.Boolean,
-
-    @Json(name = "comment")
-    val comment: kotlin.String? = null,
-
-    @Json(name = "subject")
-    val subject: SlimSubject? = null
-
-) {
-
-
-}
-
+    val tags: List<String>,
+    @SerialName(value = "ep_status")
+    val epStatus: Int,
+    @SerialName(value = "vol_status")
+    val volStatus: Int,
+    // 本时间并不代表条目的收藏时间。修改评分，评价，章节观看状态等收藏信息时未更新此时间是一个 bug。请不要依赖此特性
+    @SerialName(value = "updated_at")
+    val updatedAt: String,
+    val `private`: Boolean,
+    val comment: String? = null,
+    val subject: SlimSubject? = null,
+)

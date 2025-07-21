@@ -3,7 +3,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 rootProject.name = "plugin-bangumi-data"
 
-include(":ui")
 include(":api")
+include(":api-raw")
+include(":ui")

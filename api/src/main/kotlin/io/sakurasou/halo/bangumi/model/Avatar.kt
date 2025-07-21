@@ -6,41 +6,18 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param large 
- * @param medium 
- * @param small 
+ * @param large
+ * @param medium
+ * @param small
  */
-
-
-data class Avatar (
-
-    @Json(name = "large")
-    val large: kotlin.String,
-
-    @Json(name = "medium")
-    val medium: kotlin.String,
-
-    @Json(name = "small")
-    val small: kotlin.String
-
-) {
-
-
-}
-
+@Serializable
+data class Avatar(
+    val large: String,
+    val medium: String,
+    val small: String,
+)

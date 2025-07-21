@@ -10,42 +10,25 @@
     "ArrayInDataClass",
     "EnumEntryName",
     "RemoveRedundantQualifierName",
-    "UnusedImport"
+    "UnusedImport",
 )
 
 package io.sakurasou.halo.bangumi.model
 
 import io.sakurasou.halo.bangumi.model.UserSubjectCollection
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param total 
- * @param limit 
- * @param offset 
- * @param `data` 
+ * @param total
+ * @param limit
+ * @param offset
+ * @param `data`
  */
 
-
-data class PagedUserCollection (
-
-    @Json(name = "total")
-    val total: kotlin.Int? = 0,
-
-    @Json(name = "limit")
-    val limit: kotlin.Int? = 0,
-
-    @Json(name = "offset")
-    val offset: kotlin.Int? = 0,
-
-    @Json(name = "data")
-    val `data`: kotlin.collections.List<UserSubjectCollection>? = arrayListOf()
-
-) {
-
-
-}
-
+@Serializable
+data class PagedUserCollection(
+    val total: Int? = 0,
+    val limit: Int? = 0,
+    val offset: Int? = 0,
+    val `data`: List<UserSubjectCollection>? = arrayListOf(),
+)

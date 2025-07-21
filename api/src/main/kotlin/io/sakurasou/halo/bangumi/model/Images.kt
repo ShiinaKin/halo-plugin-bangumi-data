@@ -6,49 +6,23 @@
  *
  */
 
-@file:Suppress(
-    "ArrayInDataClass",
-    "EnumEntryName",
-    "RemoveRedundantQualifierName",
-    "UnusedImport"
-)
-
 package io.sakurasou.halo.bangumi.model
 
-
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
- * 
- *
- * @param large 
- * @param common 
- * @param medium 
- * @param small 
- * @param grid 
+ * @param large
+ * @param common
+ * @param medium
+ * @param small
+ * @param grid
  */
 
-
-data class Images (
-
-    @Json(name = "large")
-    val large: kotlin.String,
-
-    @Json(name = "common")
-    val common: kotlin.String,
-
-    @Json(name = "medium")
-    val medium: kotlin.String,
-
-    @Json(name = "small")
-    val small: kotlin.String,
-
-    @Json(name = "grid")
-    val grid: kotlin.String
-
-) {
-
-
-}
-
+@Serializable
+data class Images(
+    val large: String,
+    val common: String,
+    val medium: String,
+    val small: String,
+    val grid: String,
+)
