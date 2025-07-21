@@ -24,27 +24,33 @@ import io.ktor.http.encodedPath
 import io.ktor.http.takeFrom
 import org.openapitools.client.auth.*
 
-open class ApiClient(
-        private val baseUrl: String,
+open class ApiClient {
+    private val baseUrl: String
+    private val client: HttpClient
+    private val authentications: kotlin.collections.Map<String, Authentication>
+
+    constructor(
+        baseUrl: String,
         httpClientEngine: HttpClientEngine?,
         httpClientConfig: ((HttpClientConfig<*>) -> Unit)? = null,
-) {
-
-    private val clientConfig: (HttpClientConfig<*>) -> Unit by lazy {
-        {
+    ) {
+        this.baseUrl = baseUrl
+        val clientConfig: (HttpClientConfig<*>) -> Unit = {
             it.install(ContentNegotiation) {
             }
             httpClientConfig?.invoke(it)
         }
-    }
-
-    private val client: HttpClient by lazy {
-        httpClientEngine?.let { HttpClient(it, clientConfig) } ?: HttpClient(clientConfig)
-    }
-
-    private val authentications: kotlin.collections.Map<String, Authentication> by lazy {
-        mapOf(
+        this.client = httpClientEngine?.let { HttpClient(it, clientConfig) } ?: HttpClient(clientConfig)
+        this.authentications = mapOf(
                 "OptionalHTTPBearer" to HttpBearerAuth("Bearer"), 
+                "HTTPBearer" to HttpBearerAuth("Bearer"))
+    }
+
+    constructor(baseUrl: String, httpClient: HttpClient) {
+        this.baseUrl = baseUrl
+        this.client = httpClient
+        this.authentications = mapOf(
+                "OptionalHTTPBearer" to HttpBearerAuth("Bearer"),
                 "HTTPBearer" to HttpBearerAuth("Bearer"))
     }
 
