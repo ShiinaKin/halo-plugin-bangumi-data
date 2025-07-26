@@ -1,0 +1,22 @@
+# nonk8s
+apiVersion: v1
+kind: Setting
+metadata:
+  name: plugin-bangumi-data-settings
+spec:
+  forms:
+    - group: default
+      label: 绑定用户
+      formSchema:
+        - $formkit: text
+          label: Bangumi 用户名
+          name: username
+          validation: required
+          value: ""
+          help: 唯一用户名，初始与 UID 相同，可修改一次
+        - $formkit: text
+          label: 访问令牌
+          name: accessToken
+          validation: required
+          value: ""
+          help: 你可以在 https://next.bgm.tv/demo/access-token 生成一个 AccessToken
