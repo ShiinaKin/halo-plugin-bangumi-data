@@ -17,50 +17,40 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 /**
- * 用户组 - 1 = 管理员 - 2 = Bangumi 管理猿 - 3 = 天窗管理猿 - 4 = 禁言用户 - 5 = 禁止访问用户 - 8 = 人物管理猿 - 9 = 维基条目管理猿 - 10 = 用户 - 11 = 维基人
+ * type of a character 角色，机体，舰船，组织...
  *
- * Values: Admin,BangumiAdmin,DoujinAdmin,MutedUser,BlockedUser,PersonAdmin,WikiAdmin,User,WikiUser
+ * Values: Character,Mechanic,Ship,Organization
  */
-@Serializable(with = UserGroupSerializer::class)
-enum class UserGroup(
+@Serializable(with = CharacterTypeSerializer::class)
+enum class CharacterType(
     val value: Int,
 ) {
-    Admin(1),
+    Character(1),
 
-    BangumiAdmin(2),
+    Mechanic(2),
 
-    DoujinAdmin(3),
+    Ship(3),
 
-    MutedUser(4),
-
-    BlockedUser(5),
-
-    PersonAdmin(8),
-
-    WikiAdmin(9),
-
-    User(10),
-
-    WikiUser(11),
+    Organization(4),
     ;
 
     companion object {
-        fun fromValue(value: Int): UserGroup? = entries.find { it.value == value }
+        fun fromValue(value: Int): CharacterType? = CharacterType.entries.find { it.value == value }
     }
 }
 
-object UserGroupSerializer : KSerializer<UserGroup> {
+object CharacterTypeSerializer : KSerializer<CharacterType> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UserGroup", PrimitiveKind.INT)
 
     override fun serialize(
         encoder: Encoder,
-        value: UserGroup,
+        value: CharacterType,
     ) {
         encoder.encodeInt(value.value)
     }
 
-    override fun deserialize(decoder: Decoder): UserGroup {
+    override fun deserialize(decoder: Decoder): CharacterType {
         val value = decoder.decodeInt()
-        return UserGroup.fromValue(value) ?: throw IllegalArgumentException("Unknown UserGroup value: $value")
+        return CharacterType.fromValue(value) ?: throw IllegalArgumentException("Unknown UserGroup value: $value")
     }
 }

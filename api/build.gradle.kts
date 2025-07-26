@@ -18,8 +18,6 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.client.serialization.kotlinx)
-    implementation(libs.ktor.client.auth)
-    implementation(libs.ktor.client.logging)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
 }

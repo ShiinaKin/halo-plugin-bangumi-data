@@ -8,14 +8,20 @@
 
 package io.sakurasou.halo.bangumi.model
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 /**
  * 条目类型 - `1` 为 书籍 - `2` 为 动画 - `3` 为 音乐 - `4` 为 游戏 - `6` 为 三次元  没有 `5`
  *
  * Values: Book,Anime,Music,Game,Real
  */
-@Serializable
+@Serializable(with = SubjectTypeSerializer::class)
 enum class SubjectType(
     val value: Int,
 ) {
@@ -28,4 +34,25 @@ enum class SubjectType(
     Game(4),
 
     Real(6),
+    ;
+
+    companion object {
+        fun fromValue(value: Int): SubjectType? = entries.find { it.value == value }
+    }
+}
+
+object SubjectTypeSerializer : KSerializer<SubjectType> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UserGroup", PrimitiveKind.INT)
+
+    override fun serialize(
+        encoder: Encoder,
+        value: SubjectType,
+    ) {
+        encoder.encodeInt(value.value)
+    }
+
+    override fun deserialize(decoder: Decoder): SubjectType {
+        val value = decoder.decodeInt()
+        return SubjectType.fromValue(value) ?: throw IllegalArgumentException("Unknown UserGroup value: $value")
+    }
 }

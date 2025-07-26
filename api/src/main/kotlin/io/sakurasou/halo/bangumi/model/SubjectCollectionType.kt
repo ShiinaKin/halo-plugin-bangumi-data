@@ -15,14 +15,20 @@
 
 package io.sakurasou.halo.bangumi.model
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 /**
  * - `1`: 想看 - `2`: 看过 - `3`: 在看 - `4`: 搁置 - `5`: 抛弃
  *
  * Values: Wish,Done,Doing,OnHold,Dropped
  */
-@Serializable
+@Serializable(with = SubjectCollectionTypeSerializer::class)
 enum class SubjectCollectionType(
     val value: Int,
 ) {
@@ -35,4 +41,26 @@ enum class SubjectCollectionType(
     OnHold(4),
 
     Dropped(5),
+    ;
+
+    companion object {
+        fun fromValue(value: Int): SubjectCollectionType? = entries.find { it.value == value }
+    }
+}
+
+object SubjectCollectionTypeSerializer : KSerializer<SubjectCollectionType> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("UserGroup", PrimitiveKind.INT)
+
+    override fun serialize(
+        encoder: Encoder,
+        value: SubjectCollectionType,
+    ) {
+        encoder.encodeInt(value.value)
+    }
+
+    override fun deserialize(decoder: Decoder): SubjectCollectionType {
+        val value = decoder.decodeInt()
+        return SubjectCollectionType.fromValue(value)
+            ?: throw IllegalArgumentException("Unknown UserGroup value: $value")
+    }
 }

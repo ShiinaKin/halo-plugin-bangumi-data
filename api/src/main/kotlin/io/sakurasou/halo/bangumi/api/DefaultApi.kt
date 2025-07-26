@@ -18,6 +18,7 @@ package io.sakurasou.halo.bangumi.api
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.request.request
+import io.sakurasou.halo.bangumi.model.PagedUserCharacterCollection
 import io.sakurasou.halo.bangumi.model.PagedUserCollection
 import io.sakurasou.halo.bangumi.model.SubjectCollectionType
 import io.sakurasou.halo.bangumi.model.SubjectType
@@ -111,6 +112,40 @@ open class DefaultApi(
     }
 
     /**
+     * GET /v0/users/{username}/collections/-/characters
+     * 获取用户角色收藏列表
+     *
+     * @param username 设置了用户名之后无法使用 UID。
+     * @return PagedUserCharacterCollection
+     */
+    @Suppress("UNCHECKED_CAST")
+    open suspend fun getUserCharacterCollections(username: kotlin.String): HttpResponse<PagedUserCharacterCollection> {
+        val localVariableAuthNames = listOf<String>()
+
+        val localVariableBody =
+            io.ktor.client.utils.EmptyContent
+
+        val localVariableQuery = mutableMapOf<String, List<String>>()
+
+        val localVariableHeaders = mutableMapOf<String, String>()
+
+        val localVariableConfig =
+            RequestConfig<kotlin.Any?>(
+                RequestMethod.GET,
+                "/v0/users/{username}/collections/-/characters".replace("{" + "username" + "}", "$username"),
+                query = localVariableQuery,
+                headers = localVariableHeaders,
+                requiresAuthentication = false,
+            )
+
+        return request(
+            localVariableConfig,
+            localVariableBody,
+            localVariableAuthNames,
+        ).wrap()
+    }
+
+    /**
      * GET /v0/users/{username}/collections/{subject_id}
      * 获取用户单个条目收藏
      * 获取对应用户的收藏，查看私有收藏需要 access token
@@ -177,8 +212,8 @@ open class DefaultApi(
             io.ktor.client.utils.EmptyContent
 
         val localVariableQuery = mutableMapOf<String, List<String>>()
-        subjectType?.apply { localVariableQuery["subject_type"] = listOf("$subjectType") }
-        type?.apply { localVariableQuery["type"] = listOf("$type") }
+        subjectType?.apply { localVariableQuery["subject_type"] = listOf("${subjectType.value}") }
+        type?.apply { localVariableQuery["type"] = listOf("${type.value}") }
         limit?.apply { localVariableQuery["limit"] = listOf("$limit") }
         offset?.apply { localVariableQuery["offset"] = listOf("$offset") }
 
