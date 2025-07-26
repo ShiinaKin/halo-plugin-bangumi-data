@@ -7,5 +7,4 @@ pluginManagement {
 rootProject.name = "plugin-bangumi-data"
 
 include(":api")
-include(":api-raw")
 include(":ui")

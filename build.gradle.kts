@@ -4,8 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.2.0"
-    libs.plugins.kotlinxSerialization
-    libs.plugins.ktor
+    alias(libs.plugins.kotlinxSerialization)
     id("run.halo.plugin.devtools") version "0.6.1"
 }
 
@@ -18,14 +17,17 @@ repositories {
 dependencies {
     implementation(platform("run.halo.tools.platform:plugin:2.21.0"))
     compileOnly("run.halo.app:api")
+    implementation(project(":api"))
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.coroutines)
+    compileOnly(libs.kotlinx.coroutines.reactor)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.contentNegotiation)
     implementation(libs.ktor.client.serialization.kotlinx)
-    implementation(libs.ktor.client.auth)
     implementation(libs.ktor.client.logging)
+    implementation(libs.logging)
 }
 
 tasks.test {
