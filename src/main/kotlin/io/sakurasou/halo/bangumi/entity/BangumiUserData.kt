@@ -37,10 +37,6 @@ data class BangumiUserData(
         val gameCollectionJson: String? = null,
         // val realCollection: List<UserSubjectCollection>? = null,
         val realCollectionJson: String? = null,
-        val lastUpdateTime: String =
-            Clock.System
-                .now()
-                .toEpochMilliseconds()
-                .toString(),
+        val lastUpdateTime: String? = null,
     )
 }
