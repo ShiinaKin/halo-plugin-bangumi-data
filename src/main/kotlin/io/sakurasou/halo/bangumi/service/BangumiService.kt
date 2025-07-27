@@ -24,7 +24,7 @@ class BangumiService(
     private val bangumiApi: DefaultApi,
     private val bangumiDAO: BangumiDAO,
 ) {
-    private val logger = KotlinLogging.logger { }
+    private val logger = KotlinLogging.logger { this::class.java }
 
     fun getUserData(): Mono<BangumiUserData> =
         bangumiDAO.getBindUserInfo().flatMap { (username, accessToken) ->
@@ -35,16 +35,16 @@ class BangumiService(
                     if (Instant.fromEpochSeconds(it.spec!!.lastUpdateTime!!.toLong()).plus(1.days) >=
                         Clock.System.now()
                     ) {
-                        logger.info { "Cached data is up-to-date, returning cached data..." }
+                        logger.debug { "Cached data is up-to-date, returning cached data..." }
                         Mono.just(it)
                     } else {
-                        logger.info { "User data is outdated, updating..." }
-                        getAndUpdateUserData(username, true)
+                        logger.debug { "User data is outdated, updating..." }
+                        getAndUpdateUserData(username, it)
                     }
                 }.switchIfEmpty(
                     Mono.defer {
-                        logger.info { "User data not found, fetching from API..." }
-                        getAndUpdateUserData(username, false)
+                        logger.debug { "User data not found, fetching from API..." }
+                        getAndUpdateUserData(username)
                     },
                 )
         }
@@ -52,31 +52,42 @@ class BangumiService(
     fun updateUserData(): Mono<Void> =
         bangumiDAO
             .getBindUserInfo()
-            .doOnNext { (username, accessToken) ->
+            .flatMap { (username, accessToken) ->
                 bangumiApi.setBearerToken(accessToken)
                 bangumiDAO
                     .getUserData(username)
-                    .flatMap { getAndUpdateUserData(username, true) }
-                    .switchIfEmpty(getAndUpdateUserData(username, false))
-                logger.info { "Update user data manually" }
-            }.flatMap {
-                Mono.empty()
+                    .flatMap { oldData ->
+                        logger.debug { oldData }
+                        getAndUpdateUserData(username, oldData)
+                    }.switchIfEmpty(getAndUpdateUserData(username))
+                    .flatMap {
+                        Mono.empty<Void>()
+                    }
+            }.doFinally {
+                logger.debug { "Update user data manually" }
             }
 
     private fun getAndUpdateUserData(
         username: String,
-        isExist: Boolean,
+        oldData: BangumiUserData? = null,
     ): Mono<BangumiUserData> =
         getUserDataFromApi(username).flatMap { userData ->
-            val bangumiUserData =
-                BangumiUserData(spec = userData)
-            bangumiUserData.metadata =
-                Metadata().apply {
-                    name = username
-                }
-            if (isExist) {
+            oldData?.let {
+                val bangumiUserData =
+                    oldData.copy(spec = userData).also {
+                        it.metadata = oldData.metadata
+                    }
+                logger.debug { "update old data" }
                 bangumiDAO.updateUserData(bangumiUserData)
-            } else {
+            } ?: run {
+                val bangumiUserData =
+                    BangumiUserData(spec = userData).apply {
+                        metadata =
+                            Metadata().apply {
+                                name = username
+                            }
+                    }
+                logger.debug { "create new data" }
                 bangumiDAO.saveUserData(bangumiUserData)
             }
         }

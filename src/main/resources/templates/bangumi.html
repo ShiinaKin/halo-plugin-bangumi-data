@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="https://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Bangumi | ' + ${site.title}"></title>
+    <link rel="stylesheet" th:href="@{/plugins/bangumi-data/assets/css/bangumi.css}">
+    <script th:src="@{/plugins/bangumi-data/assets/js/bangumi.js}"></script>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <div class="bangumi-container" th:if="${bangumiData != null}">
+        <div class="bangumi-user-info">
+            <div class="user-avatar">
+                <img id="bangumi-avatar" src="" alt="User Avatar"/>
+            </div>
+            <div class="user-details">
+                <h2 id="bangumi-nickname"></h2>
+                <p id="bangumi-sign"></p>
+            </div>
+            <div class="last-update-time">
+                <span id="data-last-update-time"></span>
+            </div>
+        </div>
+        <hr class="bangumi-separator"/>
+        <div id="anime-collection" class="bangumi-collection">
+            <div class="bangumi-collection-header">
+                <h2>Anime</h2>
+                <!-- <a href="/bangumi/anime" class="more-button">More</a> -->
+            </div>
+            <div class="bangumi-inner"></div>
+        </div>
+        <div id="book-collection" class="bangumi-collection">
+            <div class="bangumi-collection-header">
+                <h2>Books</h2>
+                <!-- <a href="/bangumi/book" class="more-button">More</a> -->
+            </div>
+            <div class="bangumi-inner"></div>
+        </div>
+        <div id="music-collection" class="bangumi-collection">
+            <div class="bangumi-collection-header">
+                <h2>Music</h2>
+                <!-- <a href="/bangumi/music" class="more-button">More</a> -->
+            </div>
+            <div class="bangumi-inner"></div>
+        </div>
+        <div id="game-collection" class="bangumi-collection">
+            <div class="bangumi-collection-header">
+                <h2>Games</h2>
+                <!-- <a href="/bangumi/game" class="more-button">More</a> -->
+            </div>
+            <div class="bangumi-inner"></div>
+        </div>
+        <div id="real-collection" class="bangumi-collection">
+            <div class="bangumi-collection-header">
+                <h2>Real</h2>
+                <!-- <a href="/bangumi/real" class="more-button">More</a> -->
+            </div>
+            <div class="bangumi-inner"></div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        const bangumiData = /*[[${bangumiData}]]*/ null;
+        document.addEventListener('DOMContentLoaded', () => {
+            if (bangumiData) {
+                renderBangumiPage(bangumiData);
+            }
+        });
+    </script>
+</th:block>
+</body>
+</html>
