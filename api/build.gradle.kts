@@ -14,10 +14,18 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.contentNegotiation)
-    implementation(libs.ktor.client.serialization.kotlinx)
+    implementation(libs.ktor.client.core) {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation(libs.ktor.client.cio) {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation(libs.ktor.client.contentNegotiation) {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation(libs.ktor.client.serialization.kotlinx) {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
 }
