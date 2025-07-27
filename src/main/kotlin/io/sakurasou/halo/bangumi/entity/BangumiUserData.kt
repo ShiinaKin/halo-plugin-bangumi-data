@@ -1,9 +1,6 @@
 package io.sakurasou.halo.bangumi.entity
 
-import io.sakurasou.halo.bangumi.model.UserSubjectCollection
 import io.swagger.v3.oas.annotations.media.Schema
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import run.halo.app.extension.AbstractExtension
 import run.halo.app.extension.GVK
 

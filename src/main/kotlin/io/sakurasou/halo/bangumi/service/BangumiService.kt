@@ -5,6 +5,7 @@ import io.sakurasou.halo.bangumi.api.DefaultApi
 import io.sakurasou.halo.bangumi.dao.BangumiDAO
 import io.sakurasou.halo.bangumi.entity.BangumiUserData
 import io.sakurasou.halo.bangumi.model.SubjectType
+import io.sakurasou.halo.bangumi.vo.Result
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -24,7 +25,7 @@ class BangumiService(
     private val bangumiApi: DefaultApi,
     private val bangumiDAO: BangumiDAO,
 ) {
-    private val logger = KotlinLogging.logger { this::class.java }
+    private val logger = KotlinLogging.logger {}
 
     fun getUserData(): Mono<BangumiUserData> =
         bangumiDAO.getBindUserInfo().flatMap { (username, accessToken) ->
@@ -49,7 +50,7 @@ class BangumiService(
                 )
         }
 
-    fun updateUserData(): Mono<Void> =
+    fun updateUserData(): Mono<Result> =
         bangumiDAO
             .getBindUserInfo()
             .flatMap { (username, accessToken) ->
@@ -61,8 +62,11 @@ class BangumiService(
                         getAndUpdateUserData(username, oldData)
                     }.switchIfEmpty(getAndUpdateUserData(username))
                     .flatMap {
-                        Mono.empty<Void>()
+                        Mono.just(Result("更新数据成功"))
                     }
+            }.onErrorResume {
+                logger.error(it) { "更新用户数据失败" }
+                Mono.just(Result("更新用户数据失败: ${it.message ?: "未知错误"}", false))
             }.doFinally {
                 logger.debug { "Update user data manually" }
             }
@@ -92,61 +96,39 @@ class BangumiService(
             }
         }
 
-    private fun getUserDataFromApi(username: String): Mono<BangumiUserData.BangumiUserDataSpec> =
-        runBlocking {
-            val user = bangumiApi.getUserByName(username).body()
+    private fun getUserDataFromApi(username: String): Mono<BangumiUserData.BangumiUserDataSpec> {
+        val userMono = Mono.fromCallable { runBlocking { bangumiApi.getUserByName(username).body() } }
 
-            val book =
-                bangumiApi
-                    .getUserCollectionsByUsername(
-                        username = username,
-                        subjectType = SubjectType.Book,
-                        type = null,
-                        limit = 30,
-                        offset = 0,
-                    ).body()
-                    .data ?: throw IllegalStateException("Book collection not found")
-            val anime =
-                bangumiApi
-                    .getUserCollectionsByUsername(
-                        username = username,
-                        subjectType = SubjectType.Anime,
-                        type = null,
-                        limit = 30,
-                        offset = 0,
-                    ).body()
-                    .data ?: throw IllegalStateException("Anime collection not found")
-            val music =
-                bangumiApi
-                    .getUserCollectionsByUsername(
-                        username = username,
-                        subjectType = SubjectType.Music,
-                        type = null,
-                        limit = 30,
-                        offset = 0,
-                    ).body()
-                    .data ?: throw IllegalStateException("Music collection not found")
-            val game =
-                bangumiApi
-                    .getUserCollectionsByUsername(
-                        username = username,
-                        subjectType = SubjectType.Game,
-                        type = null,
-                        limit = 30,
-                        offset = 0,
-                    ).body()
-                    .data ?: throw IllegalStateException("Game collection not found")
-            val real =
-                bangumiApi
-                    .getUserCollectionsByUsername(
-                        username = username,
-                        subjectType = SubjectType.Real,
-                        type = null,
-                        limit = 30,
-                        offset = 0,
-                    ).body()
-                    .data ?: throw IllegalStateException("Real collection not found")
-            Mono.just(
+        fun getCollectionMono(subjectType: SubjectType) =
+            Mono.fromCallable {
+                runBlocking {
+                    bangumiApi
+                        .getUserCollectionsByUsername(
+                            username = username,
+                            subjectType = subjectType,
+                            type = null,
+                            limit = 30,
+                            offset = 0,
+                        ).body()
+                        .data ?: throw IllegalStateException("$subjectType collection not found")
+                }
+            }
+
+        val bookMono = getCollectionMono(SubjectType.Book)
+        val animeMono = getCollectionMono(SubjectType.Anime)
+        val musicMono = getCollectionMono(SubjectType.Music)
+        val gameMono = getCollectionMono(SubjectType.Game)
+        val realMono = getCollectionMono(SubjectType.Real)
+
+        return Mono
+            .zip(userMono, bookMono, animeMono, musicMono, gameMono, realMono)
+            .map { tuple ->
+                val user = tuple.t1
+                val book = tuple.t2
+                val anime = tuple.t3
+                val music = tuple.t4
+                val game = tuple.t5
+                val real = tuple.t6
                 BangumiUserData.BangumiUserDataSpec(
                     nickname = user.nickname,
                     avatar = user.avatar.large,
@@ -161,7 +143,7 @@ class BangumiService(
                             .now()
                             .toEpochMilliseconds()
                             .toString(),
-                ),
-            )
-        }
+                )
+            }
+    }
 }
