@@ -1,0 +1,18 @@
+# nonk8s
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: bangumi-data-update-role
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "BangumiData"
+    rbac.authorization.halo.run/display-name: "手动更新绑定用户的数据"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:bangumi-data:update"]
+rules:
+  - apiGroups: ["io.sakurasou.halo.bangumi"]
+    version: ["v1"]
+    resources: []
+    resourceNames: ["userData"]
+    verbs: ["update"]
