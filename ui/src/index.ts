@@ -1,23 +1,25 @@
-import { definePlugin } from '@halo-dev/console-shared'
-import HomeView from './views/HomeView.vue'
-import { IconPlug } from '@halo-dev/components'
-import { markRaw } from 'vue'
+import {definePlugin} from '@halo-dev/console-shared'
+import {IconPlug, VLoading} from '@halo-dev/components'
+import {defineAsyncComponent, markRaw} from 'vue'
 
 export default definePlugin({
   components: {},
   routes: [
     {
-      parentName: 'Root',
+      parentName: 'ToolsRoot',
       route: {
-        path: '/example',
-        name: 'Example',
-        component: HomeView,
+        path: 'bangumi-data',
+        name: 'BangumiData',
+        component: defineAsyncComponent({
+          loader: () => import("@/views/HomeView.vue"),
+          loadingComponent: VLoading,
+        }),
         meta: {
-          title: '示例页面',
+          title: 'Bangumi 数据源',
           searchable: true,
+          permissions: ["plugin:bangumi-data:update"],
           menu: {
-            name: '示例页面',
-            group: '示例分组',
+            name: 'Bangumi 数据源',
             icon: markRaw(IconPlug),
             priority: 0,
           },
