@@ -28,7 +28,7 @@ class BangumiRoute(
                         ServerResponse.ok().render(
                             templateName,
                             mapOf(
-                                "bangumiData" to bangumiDataFinder.findBangumiData().map { it.spec },
+                                "bangumiData" to bangumiDataFinder.findBangumiData().map { it },
                                 ModelConst.TEMPLATE_ID to "bangumi",
                             ),
                         )

@@ -36,15 +36,15 @@ class BangumiService(
                     if (Instant.fromEpochSeconds(it.spec!!.lastUpdateTime!!.toLong()).plus(1.days) >=
                         Clock.System.now()
                     ) {
-                        logger.debug { "Cached data is up-to-date, returning cached data..." }
+                        logger.info { "Cached data is up-to-date, returning cached data..." }
                         Mono.just(it)
                     } else {
-                        logger.debug { "User data is outdated, updating..." }
+                        logger.info { "User data is outdated, updating..." }
                         getAndUpdateUserData(username, it)
                     }
                 }.switchIfEmpty(
                     Mono.defer {
-                        logger.debug { "User data not found, fetching from API..." }
+                        logger.info { "User data not found, fetching from API..." }
                         getAndUpdateUserData(username)
                     },
                 )
@@ -68,7 +68,7 @@ class BangumiService(
                 logger.error(it) { "更新用户数据失败" }
                 Mono.just(Result("更新用户数据失败: ${it.message ?: "未知错误"}", false))
             }.doFinally {
-                logger.debug { "Update user data manually" }
+                logger.info { "Update user data manually" }
             }
 
     private fun getAndUpdateUserData(
@@ -81,7 +81,6 @@ class BangumiService(
                     oldData.copy(spec = userData).also {
                         it.metadata = oldData.metadata
                     }
-                logger.debug { "update old data" }
                 bangumiDAO.updateUserData(bangumiUserData)
             } ?: run {
                 val bangumiUserData =
@@ -91,7 +90,6 @@ class BangumiService(
                                 name = username
                             }
                     }
-                logger.debug { "create new data" }
                 bangumiDAO.saveUserData(bangumiUserData)
             }
         }

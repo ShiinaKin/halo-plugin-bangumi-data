@@ -5,7 +5,6 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import io.sakurasou.halo.bangumi.api.DefaultApi
@@ -38,7 +37,6 @@ open class Instance {
                 }
                 it.install(HttpCache)
                 it.install(HttpTimeout)
-                it.install(Logging)
                 it.defaultRequest {
                     header(
                         "User-Agent",
