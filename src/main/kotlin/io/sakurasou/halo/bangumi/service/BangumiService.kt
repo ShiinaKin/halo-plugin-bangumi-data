@@ -10,11 +10,13 @@ import io.sakurasou.halo.bangumi.exception.BangumiUserAccessTokenWrongException
 import io.sakurasou.halo.bangumi.model.SubjectType
 import io.sakurasou.halo.bangumi.vo.Result
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
+import reactor.core.scheduler.Schedulers
 import run.halo.app.extension.Metadata
 import kotlin.time.Duration.Companion.days
 
@@ -29,6 +31,7 @@ class BangumiService(
     private val bangumiDAO: BangumiDAO,
 ) {
     private val logger = KotlinLogging.logger {}
+    private val fetchMutex = Mutex()
 
     fun getUserData(): Mono<BangumiUserData?> =
         bangumiDAO
@@ -44,13 +47,31 @@ class BangumiService(
                             logger.info { "Cached data is up-to-date, returning cached data..." }
                             Mono.just(it)
                         } else {
-                            logger.info { "User data is outdated, updating..." }
-                            getAndUpdateUserData(username, it)
+                            logger.info { "User data is outdated" }
+                            if (fetchMutex.tryLock()) {
+                                logger.info { "Fetching user data from API for $username" }
+                                getAndUpdateUserData(username, it)
+                                    .doFinally { fetchMutex.unlock() }
+                            } else {
+                                logger.info { "Another fetch operation is in progress, returning cached data..." }
+                                Mono.just(it)
+                            }
                         }
                     }.switchIfEmpty(
                         Mono.defer {
-                            logger.info { "User data not found, fetching from API..." }
-                            getAndUpdateUserData(username)
+                            logger.info { "User data not found" }
+                            if (fetchMutex.tryLock()) {
+                                logger.info { "Fetching user data from API for $username" }
+                                getAndUpdateUserData(username)
+                                    .doOnSuccess {
+                                        logger.info { "Successfully fetched and saved user data for $username" }
+                                    }.doOnError {
+                                        logger.error(it) { "Failed to fetch user data for $username" }
+                                    }.doFinally {
+                                        fetchMutex.unlock()
+                                    }.subscribeOn(Schedulers.boundedElastic())
+                                    .subscribe()
+                            }
                             Mono.empty()
                         },
                     ).onErrorResume { throw it }
