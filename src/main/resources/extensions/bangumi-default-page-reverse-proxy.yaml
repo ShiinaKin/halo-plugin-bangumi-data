@@ -1,0 +1,13 @@
+# nonk8s
+
+apiVersion: plugin.halo.run/v1alpha1
+kind: ReverseProxy
+metadata:
+  name: bangumi-default-page-reverse-proxy
+rules:
+  - path: /css/**
+    file:
+      directory: assets/css
+  - path: /js/**
+    file:
+      directory: assets/js
