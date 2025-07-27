@@ -1,5 +1,5 @@
 # nonk8s
-apiVersion: v1
+apiVersion: v1alpha1
 kind: Setting
 metadata:
   name: plugin-bangumi-data-settings
