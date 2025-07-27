@@ -1,9 +1,7 @@
 package io.sakurasou.halo.bangumi.controller
 
-import io.sakurasou.halo.bangumi.entity.BangumiUserData
 import io.sakurasou.halo.bangumi.service.BangumiService
 import io.sakurasou.halo.bangumi.vo.Result
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono

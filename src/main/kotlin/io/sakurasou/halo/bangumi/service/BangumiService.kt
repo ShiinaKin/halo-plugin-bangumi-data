@@ -5,6 +5,7 @@ import io.ktor.http.HttpStatusCode
 import io.sakurasou.halo.bangumi.api.DefaultApi
 import io.sakurasou.halo.bangumi.dao.BangumiDAO
 import io.sakurasou.halo.bangumi.entity.BangumiUserData
+import io.sakurasou.halo.bangumi.exception.BangumiAccessFailedException
 import io.sakurasou.halo.bangumi.exception.BangumiUserAccessTokenWrongException
 import io.sakurasou.halo.bangumi.model.SubjectType
 import io.sakurasou.halo.bangumi.vo.Result
@@ -12,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
-import org.springframework.data.util.TypeUtils.type
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import run.halo.app.extension.Metadata
@@ -123,7 +123,7 @@ class BangumiService(
                         } else if (response.status == HttpStatusCode.Unauthorized.value) {
                             throw BangumiUserAccessTokenWrongException()
                         } else {
-                            throw BangumiUserAccessTokenWrongException()
+                            throw BangumiAccessFailedException()
                         }
                     }
                 }.onErrorResume {

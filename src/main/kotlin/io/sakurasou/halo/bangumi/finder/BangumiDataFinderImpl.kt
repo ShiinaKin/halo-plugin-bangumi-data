@@ -1,6 +1,5 @@
 package io.sakurasou.halo.bangumi.finder
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.sakurasou.halo.bangumi.entity.BangumiUserData
 import io.sakurasou.halo.bangumi.service.BangumiService
 import reactor.core.publisher.Mono
@@ -14,8 +13,6 @@ import run.halo.app.theme.finders.Finder
 class BangumiDataFinderImpl(
     private val bangumiService: BangumiService,
 ) : BangumiDataFinder {
-    private val logger = KotlinLogging.logger {}
-
     override fun findBangumiData(): Mono<BangumiUserData.BangumiUserDataSpec?> =
         bangumiService
             .getUserData()
