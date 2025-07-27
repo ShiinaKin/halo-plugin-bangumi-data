@@ -123,11 +123,12 @@ class BangumiService(
                         } else if (response.status == HttpStatusCode.Unauthorized.value) {
                             throw BangumiUserAccessTokenWrongException()
                         } else {
+                            logger.warn { "${response.status}" }
                             throw BangumiAccessFailedException()
                         }
                     }
                 }.onErrorResume {
-                    logger.error(it) { "获取 $subjectType 收藏数据失败" }
+                    logger.warn { "获取 $subjectType 收藏数据失败" }
                     throw it
                 }
 
