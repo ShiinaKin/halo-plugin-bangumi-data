@@ -1,6 +1,8 @@
 package io.sakurasou.halo.bangumi.dao
 
 import io.sakurasou.halo.bangumi.entity.BangumiUserData
+import io.sakurasou.halo.bangumi.exception.BangumiUserAccessTokenWrongException
+import io.sakurasou.halo.bangumi.exception.BangumiUserNotBindException
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import run.halo.app.extension.ReactiveExtensionClient
@@ -22,11 +24,11 @@ open class BangumiDAO(
             .map {
                 val username =
                     (it["username"] as String).ifBlank {
-                        throw IllegalStateException("username is blank")
+                        throw BangumiUserNotBindException()
                     }
                 val accessToken =
                     (it["accessToken"] as String).ifBlank {
-                        throw IllegalStateException("accessToken is blank")
+                        throw BangumiUserAccessTokenWrongException()
                     }
                 username to accessToken
             }

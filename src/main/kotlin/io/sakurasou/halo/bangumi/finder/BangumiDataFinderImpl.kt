@@ -19,11 +19,6 @@ class BangumiDataFinderImpl(
     override fun findBangumiData(): Mono<BangumiUserData.BangumiUserDataSpec?> =
         bangumiService
             .getUserData()
-            .map { it.spec }
-            .switchIfEmpty(
-                Mono.defer {
-                    logger.info { "User data not found, fetching from API..." }
-                    null
-                },
-            )
+            .map { it?.spec }
+            .switchIfEmpty(Mono.empty())
 }
