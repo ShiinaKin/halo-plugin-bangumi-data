@@ -62,6 +62,9 @@
             <div class="bangumi-inner"></div>
         </div>
     </div>
+    <div th:if="${bangumiData == null}" class="no-data">
+        No Data
+    </div>
     <script th:inline="javascript">
         const bangumiData = /*[[${bangumiData}]]*/ null;
         document.addEventListener('DOMContentLoaded', () => {

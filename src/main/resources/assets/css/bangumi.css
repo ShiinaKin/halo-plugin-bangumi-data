@@ -147,3 +147,10 @@
   margin: 0 4px 4px 0;
   display: inline-block;
 }
+
+.no-data {
+  text-align: center;
+  color: #ccc;
+  font-size: 2em;
+  margin-top: 50px;
+}
