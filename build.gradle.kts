@@ -8,7 +8,7 @@ plugins {
     id("run.halo.plugin.devtools") version "0.6.1"
 }
 
-group = "run.halo.starter"
+group = "io.sakurasou.halo.bangumi"
 
 repositories {
     mavenCentral()
