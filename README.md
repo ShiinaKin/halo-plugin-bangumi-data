@@ -21,4 +21,4 @@
 
 插件提供 `bangumiDataFinder` 以获取数据
 
-数据结构定义可在`/api`和`BangumiUserData`中查看
+数据结构定义可在 [api/model](https://github.com/ShiinaKin/halo-plugin-bangumi-data/tree/main/api/src/main/kotlin/io/sakurasou/halo/bangumi/model) 和 [BangumiUserData](https://github.com/ShiinaKin/halo-plugin-bangumi-data/blob/main/src/main/kotlin/io/sakurasou/halo/bangumi/entity/BangumiUserData.kt) 中查看
