@@ -1,79 +1,24 @@
-# plugin-starter
+# plugin-bangumi-data
 
-Halo 2.x 插件开发快速开始模板。
+![Preview Image](./docs/img-1.png)
 
-> [!WARNING]
-> 此项目将在未来被标记为过时，后续建议使用 [halo-dev/create-halo-plugin](https://github.com/halo-dev/create-halo-plugin) 以交互式的方式创建 Halo 插件项目。
+## 介绍
 
-## 开发环境
+这是一个用于管理和展示 Bangumi 数据的插件，支持在浏览器中查看和编辑个人的 Bangumi 数据。
 
-插件开发的详细文档请查阅：<https://docs.halo.run/developer-guide/plugin/introduction>
+## 使用
 
-所需环境：
+1. 安装后，请在插件配置中绑定你的Bangumi信息
+2. 通过`/bangumi`访问插件提供的默认展示页面
 
-1. JDK 21
-2. Node 20
-3. pnpm 9
-4. Docker (可选)
+> 首次访问时，需要加载数据，可能暂时出现`No Data`字样
+>
+> 如果网络没有问题，那么数据会在几十秒内加载完成，此后每日0点会自动更新数据
+> 
+> 可以在 `后台->工具->Bangumi数据源` 中手动更新数据
 
-克隆项目：
+## 主题开发者
 
-```bash
-git clone git@github.com:halo-sigs/plugin-starter.git
+插件提供 `bangumiDataFinder` 以获取数据
 
-# 或者当你 fork 之后
-
-git clone git@github.com:{your_github_id}/plugin-starter.git
-```
-
-```bash
-cd path/to/plugin-starter
-```
-
-### 运行方式 1（推荐）
-
-> 此方式需要本地安装 Docker
-
-```bash
-# macOS / Linux
-./gradlew pnpmInstall
-
-# Windows
-./gradlew.bat pnpmInstall
-```
-
-```bash
-# macOS / Linux
-./gradlew haloServer
-
-# Windows
-./gradlew.bat haloServer
-```
-
-执行此命令后，会自动创建一个 Halo 的 Docker 容器并加载当前的插件，更多文档可查阅：<https://docs.halo.run/developer-guide/plugin/basics/devtools>
-
-### 运行方式 2
-
-> 此方式需要使用源码运行 Halo
-
-编译插件：
-
-```bash
-# macOS / Linux
-./gradlew build
-
-# Windows
-./gradlew.bat build
-```
-
-修改 Halo 配置文件：
-
-```yaml
-halo:
-  plugin:
-    runtime-mode: development
-    fixedPluginPath:
-      - "/path/to/plugin-starter"
-```
-
-最后重启 Halo 项目即可。
+数据结构定义可在`/api`和`BangumiUserData`中查看
