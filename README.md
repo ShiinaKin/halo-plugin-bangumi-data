@@ -1,12 +1,18 @@
-# plugin-bangumi-data
+<p align="center">
+    <a target="_blank" rel="noopener noreferrer">
+        <img width="100" src="./docs/logo.png" alt="LOGO" />
+    </a>
+</p>
+
+## plugin-bangumi-data
 
 ![Preview Image](./docs/img-1.png)
 
-## 介绍
+### 介绍
 
-这是一个用于管理和展示 Bangumi 数据的插件，支持在浏览器中查看和编辑个人的 Bangumi 数据。
+这是一个用于获取和展示 Bangumi 数据的插件，支持在独立页面中展示个人的 Bangumi 数据。
 
-## 使用
+### 使用
 
 1. 安装后，请在插件配置中绑定你的Bangumi信息
 2. 通过`/bangumi`访问插件提供的默认展示页面
@@ -17,7 +23,7 @@
 > 
 > 可以在 `后台->工具->Bangumi数据源` 中手动更新数据
 
-## 主题开发者
+### 主题开发者
 
 插件提供 `bangumiDataFinder` 以获取数据
 
