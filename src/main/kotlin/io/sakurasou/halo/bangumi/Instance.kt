@@ -72,9 +72,9 @@ open class Instance {
     open fun dailyTask() {
         val bangumiService = context.getBean(BangumiService::class.java)
         bangumiService
-            .updateUserData()
+            .updateUserDataByScheduler()
             .subscribeOn(Schedulers.boundedElastic())
             .subscribe()
-        logger.info { "Daily task executed: User data updated." }
+        logger.info { "Daily task executed: User data update." }
     }
 }

@@ -80,7 +80,17 @@ class BangumiService(
                 Mono.empty()
             }
 
-    fun updateUserData(): Mono<Result> =
+    fun updateUserDataManually(): Mono<Result> =
+        updateUserData().doFinally {
+            logger.info { "Update user data manually" }
+        }
+
+    fun updateUserDataByScheduler(): Mono<Result> =
+        updateUserData().doFinally {
+            logger.info { "Update user data by scheduler" }
+        }
+
+    private fun updateUserData(): Mono<Result> =
         bangumiDAO
             .getBindUserInfo()
             .flatMap { (username, accessToken) ->
@@ -95,8 +105,6 @@ class BangumiService(
             }.onErrorResume {
                 logger.warn(it) { "更新用户数据失败" }
                 Mono.just(Result("更新用户数据失败: ${it.message ?: "未知错误"}", false))
-            }.doFinally {
-                logger.info { "Update user data manually" }
             }
 
     private fun getAndUpdateUserData(

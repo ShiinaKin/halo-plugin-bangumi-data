@@ -17,5 +17,5 @@ class BangumiController(
     private val bangumiService: BangumiService,
 ) {
     @PutMapping("/userData")
-    fun manualUpdateUserData(): Mono<Result> = bangumiService.updateUserData()
+    fun manualUpdateUserData(): Mono<Result> = bangumiService.updateUserDataManually()
 }
